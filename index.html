@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta charset="utf-8"/>
+</head>
+<body>
+    <div id="mapdiv"></div>
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script>
+
+        $.getJSON('/api/data', function(data) {
+            console.log(data[0].longitude);
+            console.log(data[0].latitude);
+            var veri1=data[0].longitude;
+            var veri2=data[0].latitude;
+
+            map = new OpenLayers.Map("mapdiv");
+            map.addLayer(new OpenLayers.Layer.OSM());
+
+            var point;
+            var length=data.length;
+            //TODO - data haritaya ekleme işlemi
+            for (point = 0; point < data.length; point++) {
+            var lon=data[point].longitude;
+            var lat=data[point].latitude;
+
+            var lonLat = new OpenLayers.LonLat(lon,lat ).transform(new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                                                                map.getProjectionObject() // to Spherical Mercator Projection
+                                                                )
+            var zoom=15;
+        
+            var markers = new OpenLayers.Layer.Markers( "Markers" );
+            map.addLayer(markers)
+                
+            markers.addMarker(new OpenLayers.Marker(lonLat))
+                
+            map.setCenter (lonLat, zoom)
+            }
+        });
+    </script>
+  </body>
+  </html>
