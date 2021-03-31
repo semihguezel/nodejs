@@ -14,7 +14,8 @@
             console.log(data[0].latitude);
             var veri1=data[0].longitude;
             var veri2=data[0].latitude;
-
+          
+   
             map = new OpenLayers.Map("mapdiv");
             map.addLayer(new OpenLayers.Layer.OSM());
 
@@ -24,17 +25,27 @@
             for (point = 0; point < data.length; point++) {
             var lon=data[point].longitude;
             var lat=data[point].latitude;
-
+            var type = data[point].t;
+    
             var lonLat = new OpenLayers.LonLat(lon,lat ).transform(new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
                                                                 map.getProjectionObject() // to Spherical Mercator Projection
                                                                 )
             var zoom=15;
-        
-            var markers = new OpenLayers.Layer.Markers( "Markers" );
+
+            var size = new OpenLayers.Size(21,25);
+            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+            var icon = new OpenLayers.Icon('http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png', size, offset);
+
+            var markers = new OpenLayers.Layer.Markers( "Marker" );
             map.addLayer(markers)
-                
-            markers.addMarker(new OpenLayers.Marker(lonLat))
-                
+            if (type == "pine"){
+                markers.addMarker(new OpenLayers.Marker(lonLat,icon.clone()));
+            }
+
+            else {
+                markers.addMarker(new OpenLayers.Marker(lonLat))
+            }
+                     
             map.setCenter (lonLat, zoom)
             }
         });
